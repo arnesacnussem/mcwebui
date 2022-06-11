@@ -1,0 +1,19 @@
+{
+  "app": {
+    "autoStartDaemon": true,
+    "logViewer": {
+      "default": "latest",
+      "list": {
+        "latest": "latest.log",
+        "debug": "debug.log"
+      }
+    }
+  },
+  "daemon": {
+    "cmd": "cmd.exe",
+    "cwd": "~/Desktop/",
+    "graceShutdown": {
+      "command": "stop"
+    }
+  }
+}

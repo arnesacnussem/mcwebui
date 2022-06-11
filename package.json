@@ -1,9 +1,65 @@
 {
-  "name": "mcwebui",
-  "version": "0.0.0",
-  "license": "MIT",
-  "private": "true",
+  "name": "webui",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@emotion/react": "^11.9.3",
+    "@emotion/styled": "^11.9.3",
+    "@monaco-editor/react": "^4.4.5",
+    "@mui/icons-material": "^5.8.4",
+    "@mui/material": "^5.8.5",
+    "@mui/styled-engine-sc": "^5.8.0",
+    "@types/jest": "^27.0.1",
+    "@types/node": "^16.7.13",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "@types/throttle-debounce": "^5.0.0",
+    "copyfiles": "^2.4.1",
+    "http-proxy-middleware": "^2.0.6",
+    "monaco-editor": "^0.33.0",
+    "prettier": "^2.7.1",
+    "react": "^18.1.0",
+    "react-dom": "^18.1.0",
+    "react-is": "^18.2.0",
+    "react-json-view": "^1.21.3",
+    "react-router-dom": "^6.3.0",
+    "react-scripts": "5.0.1",
+    "react-use-websocket": "^4.2.0",
+    "styled-components": "^5.3.5",
+    "throttle-debounce": "^5.0.0",
+    "typescript": "^4.4.2",
+    "web-vitals": "^2.1.0",
+    "webui-server": "workspace:^",
+    "xterm": "^4.18.0",
+    "xterm-addon-attach": "^0.6.0",
+    "xterm-addon-fit": "^0.5.0"
+  },
+  "scripts": {
+    "start": "yarn copy-monaco && react-scripts start",
+    "build": "yarn copy-monaco && react-scripts build",
+    "format": "prettier -w ./*",
+    "copy-monaco": "copyfiles 'node_modules/monaco-editor/min/vs/**' public -u3"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "packageManager": "yarn@3.2.1",
   "workspaces": [
-    "server","webui"
+    "server"
   ]
 }
