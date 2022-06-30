@@ -4,6 +4,7 @@ import {
     binaryTransport,
     buffer,
     bufferUtf8,
+    daemonMSG,
     getSpawnOptions,
 } from './daemon-utils.js';
 import { IPty, spawn } from 'node-pty-prebuilt-multiarch';
@@ -12,13 +13,6 @@ import _ from 'lodash';
 
 export type DaemonStatus = 'stopped' | 'running' | 'stopping' | 'failed';
 export type Sender = ((data: string | Uint8Array) => void) & { id: string };
-
-const daemonMSG = (msg: string): string => {
-    const spl = msg.split('\n');
-    if (spl.length > 1)
-        return spl.map(daemonMSG).map(_.trim).join('\n').concat('\n');
-    return `\x1b[38;5;162;48;5;86m [DAEMON] \x1b[0m ${msg.trim()}\n`;
-};
 
 const Daemon = (getClient: (endpoint: WSEndpoint) => WSClient[]) => {
     const config = loadConfig();
@@ -84,7 +78,7 @@ const Daemon = (getClient: (endpoint: WSEndpoint) => WSClient[]) => {
 
         proc?.onExit(({ exitCode }) => {
             setStatus('stopped');
-            const info = `\n\n process exited with ${exitCode}`;
+            const info = `process exited with ${exitCode}`;
             console.log(info);
             consoleBuffer += info;
         });
@@ -145,9 +139,11 @@ const Daemon = (getClient: (endpoint: WSEndpoint) => WSClient[]) => {
         }
         return true;
     };
-    const readLog = (readAll?: boolean) => {
-        return readAll
-            ? consoleBuffer
+    const readLog = (): string | Buffer => {
+        return binaryTransport
+            ? Buffer.from(
+                  consoleBuffer.substring(consoleBuffer.length - bufferLimit)
+              )
             : consoleBuffer.substring(consoleBuffer.length - bufferLimit);
     };
 

@@ -25,7 +25,7 @@
   },
   "scripts": {
     "start": "ts-node app.ts",
-    "build": "tsc",
+    "build": "tsc --noEmit false",
     "dev": "nodemon --exec node -r ts-node/register --loader ts-node/esm --inspect --expose-gc --trace-warnings app.ts"
   },
   "type": "module",

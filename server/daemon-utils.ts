@@ -4,6 +4,15 @@ import WebSocket from 'ws';
 import os from 'os';
 
 export const binaryTransport = os.platform() !== 'win32';
+
+export const daemonMSG = (...msgs: string[]): string | Uint8Array => {
+    const st = _.flatMap(msgs, (m) => _.split(_.trimEnd(m), '\n'))
+        .map((m) => `\x1b[38;5;162;48;5;86m [DAEMON] \x1b[0m ${m}`)
+        .join('\n')
+        .concat('\n');
+    return binaryTransport ? Buffer.from(st) : st;
+};
+
 // string message buffering
 export const buffer = (ws: WebSocket, timeout: number) => {
     let s = '';

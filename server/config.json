@@ -4,14 +4,15 @@
     "logViewer": {
       "default": "latest",
       "list": {
-        "latest": "latest.log",
-        "debug": "debug.log"
+        "latest": "logs/latest.log",
+        "debug": "logs/debug.log"
       }
     }
   },
   "daemon": {
-    "cmd": "cmd.exe",
-    "cwd": "~/Desktop/",
+    "cmd": "bash",
+    "args": ["start.sh"],
+    "cwd": "/workspace/server",
     "graceShutdown": {
       "command": "stop"
     }
