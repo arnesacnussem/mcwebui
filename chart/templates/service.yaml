@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "mcwebui.fullname" . }}
+  labels:
+    {{- include "mcwebui.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.services.type }}
+  ports:
+    {{- range $i,$val := .Values.services.tcp  }}
+    - port: {{ $val.port }}
+      targetPort: {{ $val.name }}
+      protocol: TCP
+      name: {{ $val.name }}
+    {{end}}
+    - port: {{ .Values.services.mcwebui.web }}
+      targetPort: 8000
+      protocol: TCP
+      name: webui
+    - port: {{ .Values.services.mcwebui.sftp }}
+      targetPort: 22
+      protocol: TCP
+      name: sftp
+  selector:
+    {{- include "mcwebui.selectorLabels" . | nindent 4 }}
