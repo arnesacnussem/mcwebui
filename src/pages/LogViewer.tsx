@@ -54,6 +54,7 @@ const MonacoViewer = ({ logFile }: { logFile: string }) => {
         <Editor
             options={{ readOnly: true }}
             value={content}
+            // TODO: 换个语言高亮，现在这个凑合用吧
             defaultLanguage={'javascript'}
             theme={'vs-dark'}
         />

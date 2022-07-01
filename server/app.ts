@@ -2,12 +2,15 @@ import express from 'express';
 import expressWs from 'express-ws';
 import compression from 'compression';
 import { IWebSocket, WSEndpoint } from './websocket.js';
+import { throttle } from 'throttle-debounce';
+import { createProxyMiddleware } from 'http-proxy-middleware';
 import Daemon from './daemon.js';
 import path from 'path';
 import fs from 'fs';
 import os from 'os';
-import { throttle } from 'throttle-debounce';
 import _ from 'lodash';
+import { Filebrowser } from './filebrowser-daemon.js';
+import { Server } from 'http';
 
 const { app, getWss } = expressWs(express());
 const router = express.Router();
@@ -54,6 +57,7 @@ router.get('/log/:file', (req, res) => {
 
     let size = 0;
     let failed = false;
+    const supportFlush = res.flush instanceof Function;
     const pipe = throttle(
         300,
         (offset: number) => {
@@ -72,7 +76,7 @@ router.get('/log/:file', (req, res) => {
 
             fStream.once('end', () => {
                 res.write(Buffer.concat(buffer));
-                res.flush();
+                if (supportFlush) res.flush();
                 fStream.removeAllListeners();
                 fStream.close();
                 failed = false;
@@ -128,6 +132,16 @@ const dist = _.eq(process.env.NODE_ENV || 'develop', 'PRODUCTION')
     : path.resolve(process.cwd(), '../build');
 
 app.use('/api', router);
+
+const filebrowser = Filebrowser(daemon.config());
+app.use(
+    createProxyMiddleware('/api/filebrowser', {
+        //@ts-ignore
+        target: { socketPath: filebrowser.address },
+        ws: true,
+        pathRewrite: (p) => p.replace('/api/filebrowser', ''),
+    })
+);
 app.use(express.static(dist));
 app.get('*', (req, res) => {
     res.header(200);

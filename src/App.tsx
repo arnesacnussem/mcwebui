@@ -3,6 +3,7 @@ import React, { SyntheticEvent, useState } from 'react';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import ConfigPage from './pages/Config';
 import Console from './pages/Console';
+import { Filebrowser } from './pages/File';
 import LogViewer from './pages/LogViewer';
 
 interface LinkTabProps {
@@ -50,7 +51,7 @@ const App = () => {
                 <Box sx={{ flexGrow: 1 }} />
                 <Box sx={{ display: 'flex' }} ref={toolbarRef} />
             </Box>
-            <Box sx={{ height: '100%' }}>
+            <Box sx={{ display: 'flex', flexGrow: 1 }}>
                 <Routes>
                     <Route path={'/'}>
                         <Route
@@ -61,7 +62,7 @@ const App = () => {
                             path={'console'}
                             element={<Console toolbarRef={toolbarRef} />}
                         />
-                        <Route path={'files'} />
+                        <Route path={'files'} element={<Filebrowser />} />
                         <Route
                             path={'logs'}
                             element={<LogViewer toolbarRef={toolbarRef} />}

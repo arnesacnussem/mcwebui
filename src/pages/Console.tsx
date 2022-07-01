@@ -1,4 +1,4 @@
-import { Box, IconButton, Portal } from '@mui/material';
+import { IconButton, Portal } from '@mui/material';
 import { Fragment, useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { Terminal } from 'xterm';
 import { AttachAddon } from 'xterm-addon-attach';
@@ -145,9 +145,7 @@ const Console = ({ toolbarRef }: PageProps) => {
                     <DaemonControls />
                 </Portal>
             ) : null}
-            <Box sx={{ height: '100%' }}>
-                <div id={'xterm'} style={{ height: '100%', width: '100%' }} />
-            </Box>
+            <div id={'xterm'} style={{ flexGrow: 1 }} />
         </>
     );
 };

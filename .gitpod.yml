@@ -5,6 +5,7 @@
 tasks:
   - name: init
     init: >
+      curl -fsSL https://raw.githubusercontent.com/filebrowser/get/master/get.sh | bash &&
       yarn &&
       gp sync-done init
 
