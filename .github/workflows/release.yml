@@ -24,4 +24,4 @@ jobs:
       uses: docker/build-push-action@v3
       with:
         push: true
-        tags: sacnussem/mcwebui:latest
+        tags: sacnussem/mcwebui:latest, sacnussem/mcwebui:${{github.ref_name}}
