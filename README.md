@@ -1,6 +1,7 @@
 # WebUI for my Minecraft server
 
-[![https://badgen.net/github/tag/micromatch/micromatch](https://badgen.net/github/tag/arnesacnussem/mcwebui)](https://hub.docker.com/r/sacnussem/mcwebui)
+[![size](https://badgen.net/docker/size/sacnussem/mcwebui/latest?icon=docker)](https://hub.docker.com/r/sacnussem/mcwebui)
+[![release](https://badgen.net/github/release/arnesacnussem/mcwebui?icon=github)](https://github.com/arnesacnussem/mcwebui/releases/latest)
 [![build](https://github.com/arnesacnussem/mcwebui/actions/workflows/release.yml/badge.svg)](https://github.com/arnesacnussem/mcwebui/actions/workflows/release.yml)
 [![build](https://github.com/arnesacnussem/mcwebui/actions/workflows/docker-image.yml/badge.svg)](https://github.com/arnesacnussem/mcwebui/actions/workflows/docker-image.yml)
 
