@@ -66,7 +66,7 @@ const ConfigPage = () => {
             .then((j) => setList(j));
     }, []);
     return (
-        <Box sx={{ height: '100%', padding: '16px' }}>
+        <Box sx={{ flexGrow: 1, padding: '16px' }}>
             {Object.keys(list).map((key) => (
                 <ConfigEditor
                     readOnly
