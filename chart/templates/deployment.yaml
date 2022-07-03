@@ -75,6 +75,10 @@ spec:
               port: webui
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          lifecycle:
+            preStop:
+              exec:
+                command: ['curl', 'http://localhost:8000/api/daemon/stop']
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -87,3 +91,4 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      terminationGracePeriodSeconds: 160
