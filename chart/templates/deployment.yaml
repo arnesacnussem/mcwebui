@@ -8,6 +8,8 @@ spec:
   selector:
     matchLabels:
       {{- include "mcwebui.selectorLabels" . | nindent 6 }}
+  strategy:
+    type: Recreate
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -37,13 +39,17 @@ spec:
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           env:
+            - name: CONFIG_PATH
+              value: /webui/config/config.json
+            {{- if .Values.extraEnvironmentVariables }}
             {{- toYaml .Values.extraEnvironmentVariables | nindent 12 }}
+            {{- end }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion}}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           {{ if .Values.persistence.enabled }}
           volumeMounts:
             - name: config
-              mountPath: /webui
+              mountPath: /webui/config
             - name: server
               mountPath: /server
           {{ end }}
