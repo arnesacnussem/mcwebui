@@ -4,6 +4,7 @@ import {
     IPtyForkOptions,
     IWindowsPtyForkOptions,
 } from 'node-pty-prebuilt-multiarch';
+import path from 'path';
 
 export interface DaemonConfig {
     cmd: string;
@@ -43,8 +44,10 @@ export interface Config {
 }
 
 export const loadConfig = (): Config => {
+    const configPath = path.resolve(process.env.CONFIG_PATH || './config.json');
+    console.log(`Reading config file from ${configPath}`);
     const config = JSON.parse(
-        fs.readFileSync(process.env.CONFIG_PATH || './config.json').toString()
+        fs.readFileSync(configPath).toString()
     ) as Partial<Config>;
     if (_.isNil(config.daemon?.args)) {
         console.error('args is not defined, will launch with empty args.');

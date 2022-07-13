@@ -1,0 +1,27 @@
+{{- if .Values.ingress.enabled }}
+======== Config sample for nginx-ingress tcp service exposing ========
+
+{{ $relName := include "mcwebui.fullname" .}}
+{{ $relNS := .Release.Namespace }}
+{{- range $i,$val := .Values.services.tcp  }}
+{{ quote $val.port }}: {{ $relNS }}/{{ $relName }}:{{ $val.port }}
+{{- end }}
+{{ quote .Values.services.mcwebui.sftp }}: {{ $relNS }}/{{ $relName }}:{{ .Values.services.mcwebui.sftp }}
+
+!!!!!! remember to add those port to your ingress service !!!!!!
+
+======== Ingress URL URL ========
+{{- range $host := .Values.ingress.hosts }}
+  {{- range .paths }}
+  http{{ if $.Values.ingress.tls }}s{{ end }}://{{ $host.host }}{{ .path }}
+  {{- end }}
+  {{- end }}
+{{- end }}
+
+
+{{- if not .Values.ingress.enabled }}
+      "You haven't enable ingress, so you should have some idea on how to access your server."
+{{- end }}
+
+
+ヾ(❀╹◡╹)ﾉ~

@@ -1,0 +1,94 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "mcwebui.fullname" . }}
+  labels:
+    {{- include "mcwebui.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "mcwebui.selectorLabels" . | nindent 6 }}
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "mcwebui.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{ if .Values.persistence.enabled }}
+      volumes:
+        - name: server
+          persistentVolumeClaim:
+            claimName: {{ include "mcwebui.fullname" . }}
+        - name: config
+          configMap:
+            name: {{ include "mcwebui.fullname" . }}
+      {{ end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          env:
+            - name: CONFIG_PATH
+              value: /webui/config/config.json
+            {{- if .Values.extraEnvironmentVariables }}
+            {{- toYaml .Values.extraEnvironmentVariables | nindent 12 }}
+            {{- end }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion}}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{ if .Values.persistence.enabled }}
+          volumeMounts:
+            - name: config
+              mountPath: /webui/config
+            - name: server
+              mountPath: /server
+          {{ end }}
+          ports:
+            {{- range $i,$val := .Values.services.tcp  }}
+            - containerPort: {{ $val.port }}
+              protocol: TCP
+              name: {{ $val.name }}
+            {{end}}
+            - name: webui
+              containerPort: 8000
+              protocol: TCP
+            - name: sftp
+              containerPort: 22
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /api
+              port: webui
+          readinessProbe:
+            httpGet:
+              path: /api
+              port: webui
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          lifecycle:
+            preStop:
+              exec:
+                command: ['curl', 'http://localhost:8000/api/daemon/stop']
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      terminationGracePeriodSeconds: 160

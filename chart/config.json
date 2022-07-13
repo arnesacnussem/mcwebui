@@ -1,0 +1,22 @@
+{
+    "app": {
+        "autoStartDaemon": true,
+        "logViewer": {
+            "default": "latest",
+            "list": {
+                "latest": "logs/latest.log",
+                "debug": "logs/debug.log"
+            }
+        }
+    },
+    "daemon": {
+        "cmd": "bash",
+        "args": [
+            "start.sh"
+        ],
+        "cwd": "/server",
+        "graceShutdown": {
+            "command": "stop"
+        }
+    }
+}
